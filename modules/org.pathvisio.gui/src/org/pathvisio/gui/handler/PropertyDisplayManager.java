@@ -73,6 +73,7 @@ public class PropertyDisplayManager {
 		registerTypeHandler(new CommentsHandler());
 		registerTypeHandler(new DataSourceHandler());
 		registerTypeHandler(new FontHandler());
+		registerTypeHandler(new MultiLineTextHandler());
 		registerTypeHandler(new ComboHandler(StaticPropertyType.GENETYPE, DataNodeType.getNames(), false));
 		registerTypeHandler(new ComboHandler(StaticPropertyType.GROUPSTYLETYPE, GroupStyle.getNames(), false));
 		registerTypeHandler(new ComboHandler(StaticPropertyType.LINESTYLE, LineStyle.getNames(), true));
