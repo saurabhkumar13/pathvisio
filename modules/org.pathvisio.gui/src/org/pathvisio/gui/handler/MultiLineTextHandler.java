@@ -28,7 +28,7 @@ import java.awt.*;
 
 /**
  * This class knows how to handle text with newlines.
- *
+ *..
  * @author Saurabh Kumar
  */
 public class MultiLineTextHandler extends DefaultCellEditor implements TableCellRenderer, TypeHandler{
@@ -39,6 +39,7 @@ public class MultiLineTextHandler extends DefaultCellEditor implements TableCell
 
     /**
      * Constructor.
+     * ..
      */
     public MultiLineTextHandler() {
         super( new JTextField() );
