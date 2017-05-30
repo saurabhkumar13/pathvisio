@@ -1693,6 +1693,9 @@ public class VPathway implements PathwayListener
 				{
 					if (deleted.getPathwayElement() instanceof MLine) {
 						removeRefFromConnectingAnchors(deleted.getPathwayElement().getMStart().getGraphRef(), deleted.getPathwayElement().getMEnd().getGraphRef());
+						deleted.getPathwayElement().getMStart().setGraphRef(null);
+						deleted.getPathwayElement().getMEnd().setGraphRef(null);
+						deleted.getPathwayElement().updateConnections();
 					}
 					deleted.markDirty();
 					removeDrawingObject(deleted, false);
@@ -1725,6 +1728,7 @@ public class VPathway implements PathwayListener
         if (graphId1 == null && (graphId2 == null)) {
             return;
         }
+
         for (PathwayElement element : getPathwayModel().getDataObjects()) {
              if (element instanceof MLine) {
                  for (MPoint point:element.getMPoints()) {

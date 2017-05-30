@@ -20,15 +20,7 @@ import java.awt.Color;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.bridgedb.DataSource;
 import org.bridgedb.Xref;
@@ -47,7 +39,7 @@ import org.pathvisio.core.view.State;
  * <p>
  * All PathwayElements have an ObjectType. This ObjectType is specified at creation
  * time and can't be modified. To create a PathwayElement,
- * use the createPathwayElement() function. This is a factory method
+ * use the @createPathwayElement() function. This is a factory method
  * that returns a different implementation class depending on
  * the specified ObjectType.
  * <p>
@@ -94,7 +86,7 @@ public class PathwayElement implements GraphIdContainer, Comparable<PathwayEleme
 	//This map should never contain non-null values, if a value
 	//is set to null the key should be removed.
 	private Map<String, String> attributes = new TreeMap<String, String>();
-
+	private ArrayList<PathwayElement> connections = new ArrayList<PathwayElement>();
 	/**
 	 * get a set of all dynamic property keys
 	 */
@@ -415,6 +407,7 @@ public class PathwayElement implements GraphIdContainer, Comparable<PathwayEleme
 					}
 				}
 				graphRef = v;
+				updateConnections();
 			}
 		}
 
@@ -1389,9 +1382,48 @@ public class PathwayElement implements GraphIdContainer, Comparable<PathwayEleme
 			fireObjectModifiedEvent(PathwayElementEvent.createCoordinatePropertyEvent(this));
 		}
 	}
+	public void insertConnection(PathwayElement in, PathwayElement out){
+		if(connections.contains(out))
+			connections.remove(out);
+		if(!connections.contains(in)&&in!=null&&in!=this)
+			connections.add(in);
+	}
+	public void updateConnections(){
+		Pathway p = mPoints.get(0).getPathway();
+		if(p==null) return;
+		PathwayElement pe1 = p.getElementById(getMStart().getGraphRef());
+		PathwayElement pe2 = p.getElementById(getMEnd().getGraphRef());
+		if(connections.size()>=2){
+			PathwayElement t1 = connections.get(0);
+			PathwayElement t2 = connections.get(1);
+			if(t1!=null) t1.insertConnection(pe1,t2);
+			if(t2!=null) t2.insertConnection(pe2,t1);
+		}
+		if(connections.size()<2){connections.add(null);connections.add(null);}
+		connections.set(0,pe1);
+		connections.set(1,pe2);
+		if(pe1!=null) pe1.insertConnection(pe2,null);
+		if(pe2!=null) pe2.insertConnection(pe1,null);
+	}
 
 	public MPoint getMStart()
 	{
+//		if(mPoints.get(0).getPathway()!=null)
+//		{
+//			Pathway p = mPoints.get(0).getPathway();
+//			PathwayElement pe1 = p.getElementById(mPoints.get(0).getGraphRef());
+//			PathwayElement pe2 = p.getElementById(getMEnd().getGraphRef());
+//			if(pe1!=null){
+//				System.out.println("Pe Start: ");
+//				for(int i=0;i<pe1.connections.size();i++)
+//					System.out.println(pe1.connections.get(i).doGetGraphId());
+//			}
+//			if(pe2!=null){
+//				System.out.println("Pe End: ");
+//				for(int i=0;i<pe2.connections.size();i++)
+//					System.out.println(pe2.connections.get(i).doGetGraphId());
+//			}
+//		}
 		return mPoints.get(0);
 	}
 

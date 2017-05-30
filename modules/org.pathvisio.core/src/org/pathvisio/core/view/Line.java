@@ -74,7 +74,7 @@ public class Line extends Graphics implements Adjustable
 	public Line(VPathway canvas, PathwayElement o)
 	{
 		super(canvas, o);
-
+		o.updateConnections();
 		points = new ArrayList<VPoint>();
 		addPoint(o.getMStart());
 		addPoint(o.getMEnd());
